@@ -7,211 +7,211 @@
 ![WireGuard](https://img.shields.io/badge/WireGuard-Mesh-88171A?logo=wireguard&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**WireGuard mesh management platform** with browser-based SSH terminal, real-time health monitoring, and multi-tenant support.
+**Plataforma de gerenciamento de mesh WireGuard** com terminal SSH no navegador, monitoramento de saude em tempo real e suporte multi-tenant.
 
-VecGate provides a single dashboard to manage WireGuard mesh networks across multiple servers. Add nodes, monitor their status, generate WireGuard configs, deploy configurations remotely, and open SSH sessions directly from your browser — all through a modern dark-themed UI.
+VecGate fornece um unico dashboard para gerenciar redes mesh WireGuard em multiplos servidores. Adicione nodes, monitore seus status, gere configuracoes WireGuard, faca deploy de configuracoes remotamente e abra sessoes SSH diretamente do navegador — tudo atraves de uma interface moderna com tema escuro.
 
 ---
 
 ## Screenshots
 
-> Screenshots coming soon.
+> Screenshots em breve.
 
-| View | Description |
-|------|-------------|
-| **Dashboard** | Overview with node status cards (online/offline), average latency, and recent activity feed |
-| **Hosts** | Card grid of all mesh nodes with search, add/edit/remove, WireGuard key generation, and config viewer |
-| **Topology** | Interactive network map (React Flow) with circular/grid layouts, colored mesh links, and detail panel |
-| **Terminal** | Full xterm.js terminal in the browser connected via WebSocket SSH to any mesh node |
-| **Users** | User management table with role assignment and password changes |
-| **Audit Log** | Filterable log of all actions (login, SSH connections, host changes, deployments) |
-| **Settings** | Instance configuration for network defaults and client branding |
-
----
-
-## Features
-
-- **Dashboard** — Real-time overview of all nodes with online/offline status and latency
-- **SSH Terminal in Browser** — Full interactive terminal via WebSocket + ssh2 (xterm.js frontend)
-- **Host Management** — Add, edit, remove mesh nodes with IP, provider, region, and SSH credentials
-- **WireGuard Key Generation** — Generate keypairs and download `wg0.conf` for any node
-- **Remote Deployment** — Push WireGuard configs to nodes via SSH with one click
-- **Health Monitoring** — Automatic ping every 30 seconds to all nodes
-- **Audit Trail** — Every action is logged: logins, SSH sessions, host changes, deployments
-- **User Management** — Multiple users with role-based access
-- **Multi-Tenant** — Each deployment gets its own branding via `client.config.json` (company name, colors, logo)
-- **Network Topology** — Interactive mesh visualization with React Flow (circular and grid layouts)
-- **JWT Authentication** — Secure API access with 24h token expiration
-- **Docker Deployment** — Single `docker-compose up` connecting to your mesh network
+| Tela | Descricao |
+|------|-----------|
+| **Dashboard** | Visao geral com cards de status dos nodes (online/offline), latencia media e feed de atividades recentes |
+| **Hosts** | Grid de cards de todos os nodes do mesh com busca, adicionar/editar/remover, geracao de chaves WireGuard e visualizador de configuracao |
+| **Topologia** | Mapa interativo da rede (React Flow) com layouts circular/grid, links coloridos do mesh e painel de detalhes |
+| **Terminal** | Terminal xterm.js completo no navegador conectado via WebSocket SSH a qualquer node do mesh |
+| **Usuarios** | Tabela de gerenciamento de usuarios com atribuicao de roles e troca de senhas |
+| **Log de Auditoria** | Log filtravel de todas as acoes (login, conexoes SSH, alteracoes em hosts, deploys) |
+| **Configuracoes** | Configuracao da instancia para padroes de rede e branding do cliente |
 
 ---
 
-## Architecture
+## Funcionalidades
+
+- **Dashboard** — Visao geral em tempo real de todos os nodes com status online/offline e latencia
+- **Terminal SSH no Navegador** — Terminal interativo completo via WebSocket + ssh2 (frontend xterm.js)
+- **Gerenciamento de Hosts** — Adicionar, editar, remover nodes do mesh com IP, provedor, regiao e credenciais SSH
+- **Geracao de Chaves WireGuard** — Gerar pares de chaves e baixar `wg0.conf` para qualquer node
+- **Deploy Remoto** — Enviar configuracoes WireGuard para nodes via SSH com um clique
+- **Monitoramento de Saude** — Ping automatico a cada 30 segundos para todos os nodes
+- **Trilha de Auditoria** — Toda acao e registrada: logins, sessoes SSH, alteracoes em hosts, deploys
+- **Gerenciamento de Usuarios** — Multiplos usuarios com acesso baseado em roles
+- **Multi-Tenant** — Cada deploy recebe seu proprio branding via `client.config.json` (nome da empresa, cores, logo)
+- **Topologia de Rede** — Visualizacao interativa do mesh com React Flow (layouts circular e grid)
+- **Autenticacao JWT** — Acesso seguro a API com expiracao de token em 24h
+- **Deploy com Docker** — Um unico `docker-compose up` conectando a sua rede mesh
+
+---
+
+## Arquitetura
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                   Browser                       │
+│                   Navegador                     │
 │  React 18 + MUI + xterm.js + React Flow         │
-│  (Vite build served as static files)            │
+│  (Build Vite servido como arquivos estaticos)   │
 └──────────────┬──────────────┬───────────────────┘
                │ HTTP/REST    │ WebSocket
                ▼              ▼
 ┌─────────────────────────────────────────────────┐
 │              Node.js + Express                  │
 │                                                 │
-│  /api/auth     — JWT login/session              │
+│  /api/auth     — Login/sessao JWT               │
 │  /api/hosts    — CRUD + keygen + wgconf         │
-│  /api/ssh      — Remote exec + WG deploy        │
-│  /api/settings — Instance config + audit log    │
-│  /api/users    — User management                │
-│  /api/config   — Client branding (public)       │
-│  /ws/ssh       — WebSocket SSH terminal         │
+│  /api/ssh      — Execucao remota + deploy WG    │
+│  /api/settings — Config da instancia + auditoria│
+│  /api/users    — Gerenciamento de usuarios      │
+│  /api/config   — Branding do cliente (publico)  │
+│  /ws/ssh       — Terminal SSH WebSocket         │
 │                                                 │
-│  Health check loop (ping every 30s)             │
+│  Loop de health check (ping a cada 30s)         │
 └──────────────┬──────────────┬───────────────────┘
                │              │
                ▼              ▼
 ┌──────────────────┐  ┌──────────────────────────┐
-│   SQLite (WAL)   │  │   Mesh Network (Docker)  │
-│   better-sqlite3 │  │   SSH + Ping to nodes    │
+│   SQLite (WAL)   │  │   Rede Mesh (Docker)     │
+│   better-sqlite3 │  │   SSH + Ping para nodes  │
 └──────────────────┘  └──────────────────────────┘
 ```
 
 ---
 
-## Tech Stack
+## Stack Tecnologica
 
-| Layer | Technology |
-|-------|-----------|
+| Camada | Tecnologia |
+|--------|-----------|
 | **Backend** | Node.js 20, Express 4, better-sqlite3, jsonwebtoken, bcryptjs |
-| **SSH** | ssh2 (SSH connections), ws (WebSocket server) |
+| **SSH** | ssh2 (conexoes SSH), ws (servidor WebSocket) |
 | **Frontend** | React 18, Vite 5, Material UI 5, xterm.js, React Flow, Recharts, Framer Motion |
-| **Database** | SQLite with WAL mode and foreign keys |
+| **Banco de Dados** | SQLite com modo WAL e foreign keys |
 | **Container** | Docker (Alpine), Docker Compose |
-| **Network** | WireGuard (wg-quick, wg genkey/pubkey), ICMP ping health checks |
+| **Rede** | WireGuard (wg-quick, wg genkey/pubkey), health checks via ping ICMP |
 
 ---
 
-## Quick Start
+## Como Usar
 
-### Prerequisites
+### Pre-requisitos
 
-- Docker and Docker Compose
-- A Docker network connected to your mesh (or create one)
-- Node.js 20+ (for frontend build)
+- Docker e Docker Compose
+- Uma rede Docker conectada ao seu mesh (ou crie uma)
+- Node.js 20+ (para build do frontend)
 
-### 1. Clone and configure
+### 1. Clonar e configurar
 
 ```bash
 git clone https://github.com/Vinicius-Costa14/vecgate.git
 cd vecgate
 
-# Edit client branding and default credentials
+# Editar branding do cliente e credenciais padrao
 cp client.config.json client.config.json.bak
 nano client.config.json
 
-# Create .env from example
+# Criar .env a partir do exemplo
 cp .env.example .env
-nano .env  # Set JWT_SECRET
+nano .env  # Defina o JWT_SECRET
 ```
 
-### 2. Build the frontend
+### 2. Buildar o frontend
 
 ```bash
 cd frontend
 npm install
-npm run build   # Creates frontend/dist/
+npm run build   # Cria frontend/dist/
 cd ..
 ```
 
-### 3. Create the Docker network (if needed)
+### 3. Criar a rede Docker (se necessario)
 
 ```bash
-# Replace with your actual mesh network name
+# Substitua pelo nome real da sua rede mesh
 docker network create mesh-network
 ```
 
 ### 4. Deploy
 
 ```bash
-# Update docker-compose.yml network name to match your mesh
+# Atualize o nome da rede no docker-compose.yml para corresponder ao seu mesh
 docker compose up -d --build
 ```
 
-### 5. Access
+### 5. Acessar
 
-Open `http://localhost:3000` and log in with the credentials from `client.config.json`.
+Abra `http://localhost:3000` e faca login com as credenciais do `client.config.json`.
 
-**Default:** `admin` / `changeme` (change this immediately)
+**Padrao:** `admin` / `changeme` (altere imediatamente)
 
 ---
 
-## API Endpoints
+## Endpoints da API
 
-### Authentication
+### Autenticacao
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/auth/login` | Login with username/password, returns JWT |
-| `GET` | `/api/auth/me` | Get current user info |
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| `POST` | `/api/auth/login` | Login com usuario/senha, retorna JWT |
+| `GET` | `/api/auth/me` | Obter informacoes do usuario atual |
 
 ### Hosts
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/hosts` | List all mesh nodes |
-| `GET` | `/api/hosts/:id` | Get node details |
-| `POST` | `/api/hosts` | Create new node |
-| `PUT` | `/api/hosts/:id` | Update node |
-| `DELETE` | `/api/hosts/:id` | Remove node |
-| `POST` | `/api/hosts/:id/keygen` | Generate WireGuard keypair |
-| `GET` | `/api/hosts/:id/wgconf` | Download wg0.conf for node |
-| `GET` | `/api/hosts/:id/health` | Ping node and update status |
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| `GET` | `/api/hosts` | Listar todos os nodes do mesh |
+| `GET` | `/api/hosts/:id` | Obter detalhes do node |
+| `POST` | `/api/hosts` | Criar novo node |
+| `PUT` | `/api/hosts/:id` | Atualizar node |
+| `DELETE` | `/api/hosts/:id` | Remover node |
+| `POST` | `/api/hosts/:id/keygen` | Gerar par de chaves WireGuard |
+| `GET` | `/api/hosts/:id/wgconf` | Baixar wg0.conf do node |
+| `GET` | `/api/hosts/:id/health` | Pingar node e atualizar status |
 
 ### SSH
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/ssh/exec` | Execute command on node via SSH |
-| `POST` | `/api/ssh/deploy` | Deploy WireGuard config to node |
-| `WS` | `/ws/ssh?token=...&host_id=...` | Interactive SSH terminal (WebSocket) |
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| `POST` | `/api/ssh/exec` | Executar comando no node via SSH |
+| `POST` | `/api/ssh/deploy` | Fazer deploy da configuracao WireGuard no node |
+| `WS` | `/ws/ssh?token=...&host_id=...` | Terminal SSH interativo (WebSocket) |
 
-### Settings & Users
+### Configuracoes e Usuarios
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/settings` | Get all settings |
-| `PUT` | `/api/settings` | Update settings |
-| `GET` | `/api/settings/audit` | Get audit log |
-| `GET` | `/api/users` | List users |
-| `POST` | `/api/users` | Create user |
-| `PUT` | `/api/users/:id` | Update user |
-| `DELETE` | `/api/users/:id` | Delete user |
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| `GET` | `/api/settings` | Obter todas as configuracoes |
+| `PUT` | `/api/settings` | Atualizar configuracoes |
+| `GET` | `/api/settings/audit` | Obter log de auditoria |
+| `GET` | `/api/users` | Listar usuarios |
+| `POST` | `/api/users` | Criar usuario |
+| `PUT` | `/api/users/:id` | Atualizar usuario |
+| `DELETE` | `/api/users/:id` | Deletar usuario |
 
-### Public
+### Publico
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/config` | Client branding (name, colors, logo) |
-
----
-
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `3000` | Server port |
-| `DB_PATH` | `/data/vecgate.db` | SQLite database file path |
-| `JWT_SECRET` | `change-me-in-production` | Secret for JWT token signing |
-| `CONFIG_PATH` | `./client.config.json` | Path to client config file |
-| `INIT_SQL_PATH` | `./database/init.sql` | Path to SQL schema file |
-| `FRONTEND_PATH` | `./frontend/dist` | Path to built frontend |
+| Metodo | Endpoint | Descricao |
+|--------|----------|-----------|
+| `GET` | `/api/config` | Branding do cliente (nome, cores, logo) |
 
 ---
 
-## Multi-Tenant Deployment
+## Variaveis de Ambiente
 
-Each client gets their own VecGate instance with custom branding. Edit `client.config.json` per deployment:
+| Variavel | Padrao | Descricao |
+|----------|--------|-----------|
+| `PORT` | `3000` | Porta do servidor |
+| `DB_PATH` | `/data/vecgate.db` | Caminho do arquivo de banco de dados SQLite |
+| `JWT_SECRET` | `change-me-in-production` | Secret para assinatura de tokens JWT |
+| `CONFIG_PATH` | `./client.config.json` | Caminho para o arquivo de configuracao do cliente |
+| `INIT_SQL_PATH` | `./database/init.sql` | Caminho para o arquivo de schema SQL |
+| `FRONTEND_PATH` | `./frontend/dist` | Caminho para o frontend buildado |
+
+---
+
+## Deploy Multi-Tenant
+
+Cada cliente recebe sua propria instancia VecGate com branding customizado. Edite o `client.config.json` por deploy:
 
 ```json
 {
@@ -238,35 +238,35 @@ Each client gets their own VecGate instance with custom branding. Edit `client.c
 
 ---
 
-## Database Schema
+## Schema do Banco de Dados
 
-VecGate uses SQLite with four tables:
+VecGate usa SQLite com quatro tabelas:
 
-- **users** — Panel users with bcrypt password hashes and roles
-- **hosts** — Mesh nodes with IPs, WireGuard keys, SSH credentials, and status
-- **settings** — Key-value instance configuration
-- **audit_log** — Action log with user, action type, target, and timestamp
+- **users** — Usuarios do painel com hashes bcrypt de senhas e roles
+- **hosts** — Nodes do mesh com IPs, chaves WireGuard, credenciais SSH e status
+- **settings** — Configuracao da instancia em formato chave-valor
+- **audit_log** — Log de acoes com usuario, tipo de acao, alvo e timestamp
 
 ---
 
-## Development
+## Desenvolvimento
 
 ```bash
-# Backend (with auto-reload)
+# Backend (com auto-reload)
 cd backend
 npm install
 npm run dev
 
-# Frontend (with HMR and API proxy)
+# Frontend (com HMR e proxy de API)
 cd frontend
 npm install
 npm run dev
 ```
 
-The Vite dev server proxies `/api` and `/ws` to `http://localhost:3000`.
+O servidor de desenvolvimento Vite faz proxy de `/api` e `/ws` para `http://localhost:3000`.
 
 ---
 
-## License
+## Licenca
 
 MIT
