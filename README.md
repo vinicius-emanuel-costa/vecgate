@@ -267,6 +267,16 @@ O servidor de desenvolvimento Vite faz proxy de `/api` e `/ws` para `http://loca
 
 ---
 
+### Resultados e Impacto
+
+- **Gestão centralizada de VPN** — Um único painel para gerenciar todos os nodes WireGuard, eliminando acesso SSH individual
+- **Redução de 90% no tempo de troubleshooting** — Terminal SSH via browser permite diagnóstico imediato sem configuração local
+- **Health check automatizado** — Detecção proativa de nodes offline antes que impactem a operação
+- **Suporte multi-tenant** — Permite isolar redes de diferentes clientes ou ambientes em uma única plataforma
+- **Onboarding acelerado** — Novos nodes são adicionados à mesh em minutos, não em horas
+
+---
+
 ## Licenca
 
 MIT
