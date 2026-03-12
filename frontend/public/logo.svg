@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="meshGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c4b5fd"/>
+      <stop offset="100%" style="stop-color:#e0e7ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Shield shape -->
+  <path d="M256 28L72 120v140c0 112 78 194 184 224 106-30 184-112 184-224V120L256 28z" fill="url(#shieldGrad)" opacity="0.15"/>
+  <path d="M256 48L88 132v128c0 100 72 176 168 204 96-28 168-104 168-204V132L256 48z" fill="url(#shieldGrad)" opacity="0.08"/>
+  <!-- Shield outline -->
+  <path d="M256 48L88 132v128c0 100 72 176 168 204 96-28 168-104 168-204V132L256 48z" stroke="url(#shieldGrad)" stroke-width="5" fill="none" opacity="0.6"/>
+  <!-- Mesh network nodes -->
+  <g filter="url(#glow)">
+    <!-- Center node -->
+    <circle cx="256" cy="240" r="22" fill="url(#shieldGrad)"/>
+    <circle cx="256" cy="240" r="14" fill="#1e1b4b" opacity="0.6"/>
+    <circle cx="256" cy="240" r="8" fill="url(#meshGrad)"/>
+    <!-- Top node -->
+    <circle cx="256" cy="140" r="16" fill="url(#shieldGrad)"/>
+    <circle cx="256" cy="140" r="8" fill="url(#meshGrad)"/>
+    <!-- Bottom-left node -->
+    <circle cx="176" cy="320" r="16" fill="url(#shieldGrad)"/>
+    <circle cx="176" cy="320" r="8" fill="url(#meshGrad)"/>
+    <!-- Bottom-right node -->
+    <circle cx="336" cy="320" r="16" fill="url(#shieldGrad)"/>
+    <circle cx="336" cy="320" r="8" fill="url(#meshGrad)"/>
+    <!-- Left node -->
+    <circle cx="152" cy="210" r="14" fill="url(#shieldGrad)"/>
+    <circle cx="152" cy="210" r="7" fill="url(#meshGrad)"/>
+    <!-- Right node -->
+    <circle cx="360" cy="210" r="14" fill="url(#shieldGrad)"/>
+    <circle cx="360" cy="210" r="7" fill="url(#meshGrad)"/>
+  </g>
+  <!-- Mesh connections -->
+  <g stroke="url(#meshGrad)" stroke-width="2" opacity="0.35">
+    <line x1="256" y1="140" x2="256" y2="240"/>
+    <line x1="256" y1="240" x2="176" y2="320"/>
+    <line x1="256" y1="240" x2="336" y2="320"/>
+    <line x1="176" y1="320" x2="336" y2="320"/>
+    <line x1="256" y1="140" x2="152" y2="210"/>
+    <line x1="256" y1="140" x2="360" y2="210"/>
+    <line x1="152" y1="210" x2="256" y2="240"/>
+    <line x1="360" y1="210" x2="256" y2="240"/>
+    <line x1="152" y1="210" x2="176" y2="320"/>
+    <line x1="360" y1="210" x2="336" y2="320"/>
+  </g>
+  <!-- Animated pulse rings on center -->
+  <circle cx="256" cy="240" r="30" stroke="#8b5cf6" stroke-width="1.5" fill="none" opacity="0.2"/>
+  <circle cx="256" cy="240" r="42" stroke="#8b5cf6" stroke-width="1" fill="none" opacity="0.1"/>
+</svg>

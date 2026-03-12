@@ -1,0 +1,40 @@
+# =============================================
+#  VECGATE — WireGuard Mesh Manager
+#
+#  Connects to the same Docker network as the
+#  mesh lab to reach nodes via SSH/ping
+# =============================================
+
+services:
+  vecgate:
+    build: ./backend
+    container_name: vecgate
+    hostname: vecgate
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./database/init.sql:/app/database/init.sql:ro
+      - ./client.config.json:/app/client.config.json:ro
+      - ./frontend/dist:/app/frontend/dist:ro
+      - vecgate-data:/data
+      # Mount your SSH key for key-based auth (optional)
+      # - ~/.ssh/id_rsa:/keys/id_rsa:ro
+    environment:
+      - PORT=3000
+      - DB_PATH=/data/vecgate.db
+      - CONFIG_PATH=/app/client.config.json
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - INIT_SQL_PATH=/app/database/init.sql
+      - FRONTEND_PATH=/app/frontend/dist
+    networks:
+      - mesh-network
+    restart: unless-stopped
+
+volumes:
+  vecgate-data:
+
+# Connect to your mesh network
+# Replace with your actual Docker network name
+networks:
+  mesh-network:
+    external: true

@@ -1,0 +1,24 @@
+{
+    "_comment": "VECGATE — Per-client customization file. Copy and edit for each deployment.",
+
+    "company": {
+        "name": "My Company",
+        "slug": "my-company",
+        "logo_url": "/logo.png",
+        "primary_color": "#00d4aa",
+        "dark_color": "#0a0f1c"
+    },
+
+    "network": {
+        "block": 100,
+        "domain": "mesh.local",
+        "default_port_wg": 51820,
+        "default_port_ssh": 22,
+        "keepalive": 25
+    },
+
+    "admin": {
+        "default_user": "admin",
+        "default_password": "changeme"
+    }
+}
